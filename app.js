@@ -5,6 +5,7 @@ const dbConnect = require("./dbConnect");
 const Products = require("./productModel");
 const Auctions = require("./auctionModel");
 const { v4: uuidv4 } = require('uuid');
+const moment = require('moment');
 dbConnect();
 
 // Curb Cores Error by adding a header here
