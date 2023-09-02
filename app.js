@@ -5,6 +5,7 @@ const dbConnect = require("./dbConnect");
 const Products = require("./productModel");
 const Auctions = require("./auctionModel");
 const { v4: uuidv4 } = require('uuid');
+const Papa = require('papaparse');
 const moment = require('moment');
 dbConnect();
 
@@ -345,6 +346,22 @@ app.post("/addsch", async (request, response) => {
             });
         })//
 })
+
+app.get("/getsch", async (request, response) => {
+    try {
+        const allData = await Products.find({}, { sch: 1, _id: 0 }); // Fetch only the 'sch' field
+        const csv = Papa.unparse(allData.map(item => ({ sch: item.sch })));
+
+        response.setHeader('Content-Type', 'text/csv');
+        response.setHeader('Content-Disposition', 'attachment; filename=schData.csv');
+        response.status(200).send(csv);
+    } catch (error) {
+        response.status(500).send({
+            message: "Error Fetching Data",
+            error,
+        });
+    }
+});
 
 
 module.exports = app;
