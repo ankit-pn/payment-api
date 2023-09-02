@@ -349,11 +349,11 @@ app.post("/addsch", async (request, response) => {
 
 app.get("/getsch", async (request, response) => {
     try {
-        const allData = await Products.find({}, { sch: 1, _id: 0 }); // Fetch only the 'sch' field
-        const csv = Papa.unparse(allData.map(item => ({ sch: item.sch })));
+        const allData = await Products.find({}); // Fetch all fields for each document
+        const csv = Papa.unparse(allData);
 
         response.setHeader('Content-Type', 'text/csv');
-        response.setHeader('Content-Disposition', 'attachment; filename=schData.csv');
+        response.setHeader('Content-Disposition', 'attachment; filename=allData.csv');
         response.status(200).send(csv);
     } catch (error) {
         response.status(500).send({
