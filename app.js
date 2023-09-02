@@ -349,8 +349,13 @@ app.post("/addsch", async (request, response) => {
 
 app.get("/getsch", async (request, response) => {
     try {
-        const allData = await Products.find({}); // Fetch all fields for each document
-        const csv = Papa.unparse(allData);
+        const allData = await Products.find({}).lean(); // Fetch all fields for each document and make them plain JavaScript objects
+        const cleanedData = allData.map(doc => {
+            delete doc._id;  // Optionally remove the _id field
+            delete doc.__v; // Optionally remove the __v field
+            return doc;
+        });
+        const csv = Papa.unparse(cleanedData);
 
         response.setHeader('Content-Type', 'text/csv');
         response.setHeader('Content-Disposition', 'attachment; filename=allData.csv');
@@ -362,6 +367,7 @@ app.get("/getsch", async (request, response) => {
         });
     }
 });
+
 
 
 module.exports = app;
