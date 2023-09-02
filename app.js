@@ -321,10 +321,12 @@ app.post("/addsch", async (request, response) => {
     const name = request.body.name;
     const sch = request.body.sch;
     const amount = request.body.amount;
+    const time = moment().format('YYYY-MM-DD HH:mm:ss');
     const data = new Products({
         name,
         sch,
-        amount
+        amount,
+        time
     });
 
     data.save()
