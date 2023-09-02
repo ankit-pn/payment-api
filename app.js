@@ -351,10 +351,14 @@ app.get("/getsch", async (request, response) => {
     try {
         const allData = await Products.find({}).lean(); // Fetch all fields for each document and make them plain JavaScript objects
         const cleanedData = allData.map(doc => {
+            if (!doc.time) {
+                doc.time = "N/A";  // Set a default value if 'time' is not present
+            }
             delete doc._id;  // Optionally remove the _id field
             delete doc.__v; // Optionally remove the __v field
             return doc;
         });
+
         const csv = Papa.unparse(cleanedData);
 
         response.setHeader('Content-Type', 'text/csv');
@@ -367,6 +371,7 @@ app.get("/getsch", async (request, response) => {
         });
     }
 });
+
 
 
 
